@@ -1,0 +1,404 @@
+<?php
+
+/**
+ * Implementation of hook_install()
+ * Create the default image styles used by viewerjs.
+ */
+function viewerjs_install() {
+  $image_styles = $image_styles();
+  if (!isset($image_styles['viewerjs'])) {
+    $style = image_style_save(array('name' => 'viewerjs'));
+    $effect = array(
+      'name' => 'image_scale',
+      'data' => array(
+        'width' => 900,
+        'height' => 600,
+        'upscale' => FALSE,
+      ),
+      'isid' => $style['isid'],
+    );
+    image_effect_save($effect);
+  }
+
+  if (!isset($image_styles['viewerjs_thumbnail'])) {
+    $style = image_style_save(array('name' => 'viewerjs_thumbnail'));
+    $effect = array(
+      'name' => 'image_scale',
+      'data' => array(
+        'width' => 169,
+        'height' => 80,
+        'upscale' => FALSE,
+      ),
+      'isid' => $style['isid'],
+    );
+    image_effect_save($effect);
+  }
+}
+
+/**
+ * @return mixed
+ */
+function viewerjs_libraries_info() {
+  $libraries['viewerjs'] = array(
+    'name' => 'ViewerJs.org',
+    'vendor url' => 'https://github.com/Strae/Viewer.js',
+    'download url' => 'https://github.com/Strae/Viewer.js/archive/master.zip',
+    'version' => 'last'
+  );
+  return $libraries;
+}
+
+/**/
+
+/**
+ * @param $phase
+ *
+ * @return array
+ */
+function viewerjs_requirements($phase) {
+  $requirements = array();
+  // Ensure translations do not break at install time
+  $t = get_t();
+  $requirements['viewerjs'] = array(
+    'title' => $t('ViewerJs'),
+  );
+  $libraries = libraries_get_libraries();
+  if (isset($libraries['viewerjs'])) {
+    if (TRUE !== file_exists($libraries['viewerjs'] . '/Viewer.js')) {
+      $requirements['viewerjs']['value'] = $t('Not Installed');
+      $requirements['viewerjs']['severity'] = REQUIREMENT_ERROR;
+      $requirements['viewerjs']['description'] = $t('Please install the viewerjs library %url.', array('%url' => 'https://github.com/Strae/Viewer.js'));
+    }
+    else {
+      $requirements['viewerjs']['value'] = $t('Installed');
+      $requirements['viewerjs']['severity'] = REQUIREMENT_OK;
+    }
+  }
+  else {
+    $requirements['viewerjs']['value'] = $t('Not Installed');
+    $requirements['viewerjs']['severity'] = REQUIREMENT_ERROR;
+    $requirements['viewerjs']['description'] = $t('Please install the viewerjs library %url.', array('%url' => 'https://github.com/Strae/Viewer.js'));
+  }
+  return $requirements;
+}
+
+/**/
+
+/**
+ * Implementation of hook_field_formatter_info()
+ * @return array
+ */
+function viewerjs_field_formatter_info() {
+  return array(
+    'viewerjs' => array(
+      'label' => t('ViewerJs Default'),
+      'field types' => array('file', 'image'),
+      'settings' => array(
+        'link_type' => 'overlay',
+        'overlay_size' => '600x400',
+        'preview_max_size' => '1000x700',
+        'thumbnail' => 'yes',
+        'max_image_size' => 'viewerjs',
+        'thumbnail_size' => 'viewerjs_thumbnail',
+        'template' => 'index.html'
+      )
+    ),
+  );
+}
+
+/**/
+
+/**
+ * Implementation of hook_field_formatter_settings_form()
+ *
+ * @param $field
+ * @param $instance
+ * @param $view_mode
+ * @param $form
+ * @param $form_state
+ */
+function viewerjs_field_formatter_settings_form($field, $instance, $view_mode, $form, &$form_state) {
+  $styles = image_styles();
+  $styles_options = array();
+  foreach ($styles AS $style_name => $options) {
+    $styles_options[$style_name] = $options['label'];
+  }
+  $display = $instance['display'][$view_mode];
+  $settings = $display['settings'];
+  $element['link_type'] = array(
+    '#title' => t('Preview Type'),
+    '#type' => 'select',
+    '#default_value' => $settings['link_type'],
+    '#empty_option' => t('Nothing'),
+    '#options' => array(
+      'overlay' => 'Overlay',
+      'new_window' => 'New Window'
+    ),
+  );
+  $element['template'] = array(
+    '#title' => t('ViewerJs Template file'),
+    '#type' => 'textfield',
+    '#default_value' => $settings['template'],
+    '#required' => TRUE,
+    '#description' => t('The template html file to use. Default index.html. The template MUST be in the Viewerjs library folder.')
+  );
+  $element['overlay_size'] = array(
+    '#title' => t('Overlay Size'),
+    '#type' => 'textfield',
+    '#default_value' => $settings['overlay_size'],
+    '#required' => TRUE,
+    '#description' => t('The overlay size in the format widthxheight, for example 400x300.<br>Used only when Overlay is set as Preview Type')
+  );
+  $element['preview_max_size'] = array(
+    '#title' => t('Max size of the preview'),
+    '#type' => 'textfield',
+    '#default_value' => $settings['preview_max_size'],
+    '#required' => TRUE,
+    '#description' => t('Only for images: if the image size widthXheight is bigger that this value, the preview will use "viewerjs" image style.')
+  );
+  $element['max_image_size'] = array(
+    '#title' => t('Image max size'),
+    '#type' => 'select',
+    '#default_value' => $settings['max_image_size'],
+    '#required' => TRUE,
+    '#options' => $styles_options,
+    '#description' => t('Only for images: when the image is bigger than "Max size of the preview", this image style will be used to resize it.')
+  );
+
+  $element['thumbnail'] = array(
+    '#title' => t('Show thumbnails'),
+    '#type' => 'select',
+    '#default_value' => $settings['thumbnail'],
+    '#options' => array(
+      'yes' => 'Yep.',
+      'no' => 'No.'
+    ),
+  );
+
+  $element['thumbnail_size'] = array(
+    '#title' => t('Thumbnail size'),
+    '#type' => 'select',
+    '#default_value' => $settings['thumbnail_size'],
+    '#required' => TRUE,
+    '#options' => $styles_options,
+    '#description' => t('Only for images: the style used to create the thumbnail')
+  );
+
+  return $element;
+}
+
+/**/
+
+/**
+ * Implementation of hook_field_formatter_settings_summary()
+ *
+ * @param $field
+ * @param $instance
+ * @param $view_mode
+ *
+ * @return string
+ */
+function viewerjs_field_formatter_settings_summary($field, $instance, $view_mode) {
+  $display = $instance['display'][$view_mode];
+  $settings = $display['settings'];
+  if ('overlay' == $settings['link_type']) {
+    $output = t('Overlay size %size;', array('%size' => $settings['overlay_size']));
+  }
+  else {
+    $output = t('New Window;');
+  }
+  $output .= ' ' . t('using template %template;', array('%template' => $settings['template']));
+  $output .= ' ' . t('Max preview size: %size;', array('%size' => $settings['preview_max_size']));
+  $output .= ' ' . t('resized with %style image style;', array('%style' => $settings['max_image_size']));
+  $output .= ' ' . t('Show thumbnail: %thu;', array('%thu' => $settings['thumbnail']));
+  $output .= ' ' . t('resized with %style image style.', array('%style' => $settings['thumbnail_size']));
+
+  return $output;
+}
+
+/**/
+
+/**
+ * Implementation of hook_field_formatter_view()
+ *
+ * @param $entity_type
+ * @param $entity
+ * @param $field
+ * @param $instance
+ * @param $langcode
+ * @param $items
+ * @param $display
+ *
+ * @return array
+ */
+function viewerjs_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+  $element = array(
+    '#type' => 'markup',
+    '#markup' => '',
+    '#prefix' => '<div class="viewerjs-formatter-field">',
+    '#suffix' => '</div>'
+  );
+  switch ($display['type']) {
+    case 'viewerjs':
+      if (!empty($items)) {
+        $settings = $display['settings'];
+        list($ow, $oh) = explode('x', $settings['overlay_size']);
+        global $base_url;
+        drupal_add_css(drupal_get_path('module', 'viewerjs') . '/css/css/fontello.css');
+        drupal_add_css(drupal_get_path('module', 'viewerjs') . '/css/viewerjs.css');
+        drupal_add_js(drupal_get_path('module', 'viewerjs') . '/js/viewerjs.js', array('scope' => 'footer'));
+        $viewerjs = libraries_load('viewerjs');
+        foreach ($items as $delta => $item) {
+          list(, $extension) = explode('.', $item['uri']);
+          viewerjs_preview_file_alter($item, $settings);
+          $download_url = file_create_url($item['uri']);
+          $path = $base_url . '/' . $viewerjs['library path'] . '/' . $settings['template'] . '#' . $download_url;
+          $icon = theme_file_icon(array('file' => $item));
+          if (isset($item['thumbnail']) AND !empty($item['thumbnail'])) {
+            $thumbnail_css = ' style="background-image: url(\'' . $item['thumbnail'] . '\')" ';
+          }
+          else {
+            $thumbnail_css = '';
+          }
+
+
+          $size = format_size($item['filesize']);
+          $element[$delta] = array(
+            '#prefix' => '<div class="viewerjs-field-item"><div class="viewerjs-item-wrapper" ' . $thumbnail_css . '><header><span class="name">' . $icon . '<b>' . $item['filename'] . '</b></span><span class="size"><ul class="actions"><li>' . $size . '</li>',
+            'download_' . $delta => array(
+              '#prefix' => '<li>',
+              '#suffix' => '</li>',
+              '#type' => 'link',
+              '#href' => $download_url,
+              '#title' => $item['filename'],
+              '#weight' => 0,
+              '#attributes' => array(
+                'class' => array('download'),
+                'target' => '_blank'
+              )
+            ),
+            '#suffix' => '</ul></span></header></div></div>',
+            '#weight' => 0
+          );
+
+          if (in_array(strtolower($extension), viewerjs_supported_extensions())) {
+            if ('overlay' == $settings['link_type']) {
+              $element[$delta]['preview_' . $delta] = array(
+                '#prefix' => '<li>',
+                '#suffix' => '</li>',
+                '#type' => 'link',
+                '#href' => $path,
+                '#title' => t('Preview with Viewerjs.org'),
+                '#attributes' => array(
+                  'target' => '_blank',
+                  'class' => array('preview', 'viewerjs-overlay'),
+                  'data-viewerjs-overlay-width' => $ow,
+                  'data-viewerjs-overlay-height' => $oh,
+                  'data-viewerjs-overlay-id' => $item['fid']
+                ),
+                '#weight' => 1,
+              );
+
+            }
+            else {
+              $element[$delta]['preview_' . $delta] = array(
+                '#prefix' => '<li>',
+                '#suffix' => '</li>',
+                '#type' => 'link',
+                '#href' => $path,
+                '#title' => t('Preview with Viewerjs.org'),
+                '#attributes' => array(
+                  'target' => '_blank',
+                  'class' => array('preview'),
+                  'data-viewerjs-overlay-width' => $ow,
+                  'data-viewerjs-overlay-height' => $oh,
+                  'data-viewerjs-overlay-id' => $item['fid']
+                ),
+                '#weight' => 1,
+              );
+            }
+          }
+
+          // If the thumbnail is set, add another wrapper tot he dom (viewerjs-thumbnail)
+          if (isset($item['thumbnail']) AND !empty($item['thumbnail'])) {
+            $element[$delta]['#prefix'] = '<div class="viewerjs-thumbnail">' . $element[$delta]['#prefix'];
+            $element[$delta]['#suffix'] = '</ul></span></header>';
+            $element[$delta]['#suffix'] .= '</div></div></div>';
+          }
+        }
+      }
+      break;
+  }
+  return $element;
+}
+
+/**/
+
+/**
+ * Check if we have to alter the file, adding a thumbnail or resizing the
+ * dimensions (for images only)
+ *
+ * @param $file
+ * @param $settings
+ */
+function viewerjs_preview_file_alter(&$file, $settings) {
+  if (isset($settings['thumbnail']) AND 'yes' == $settings['thumbnail']) {
+    viewerjs_thumbnail_file($file, $settings['thumbnail_size']);
+  }
+
+  if ('image' === $file['type'] AND !empty($file['image_dimensions'])) {
+    list($mw, $mh) = explode('x', $settings['preview_max_size']);
+    if ($file['image_dimensions']['width'] > $mw OR $file['image_dimensions']['height'] > $mh) {
+      // use viewerjs image style.
+      $file['uri'] = image_style_url($settings['max_image_size'], $file['uri']);
+    }
+  }
+}
+
+/**/
+
+/**
+ * Create the thumbnail (image).
+ * For image files, simply use the style_url.
+ * For documents/pdf, use a icon (customizable) under viewerjs/images
+ *
+ * @param $file
+ */
+function viewerjs_thumbnail_file(&$file, $image_style) {
+  switch ($file['type']) {
+    case 'image':
+      $file['thumbnail'] = image_style_url($image_style, $file['uri']);
+      break;
+    default:
+      // Get the extension
+      list(, $extension) = explode('.', $file['uri']);
+      if (file_exists(drupal_get_path('module', 'viewerjs') . '/images/' . $extension . '.png')) {
+        $file['thumbnail'] = '/' . drupal_get_path('module', 'viewerjs') . '/images/' . $extension . '.png';
+      }
+      else {
+        $file['thumbnail'] = '/' . drupal_get_path('module', 'viewerjs') . '/images/file.png';
+      }
+      break;
+  }
+}
+
+/**/
+
+/**
+ * Return a list of extension supported by Viewerjs's PluginLoader
+ * @return array
+ */
+function viewerjs_supported_extensions() {
+  return array(
+    'pdf',
+    'odt',
+    'odp',
+    'ods',
+    'fodt', // documents
+    'jpg',
+    'jpeg',
+    'png',
+    'gif' //images
+  );
+}
+/**/

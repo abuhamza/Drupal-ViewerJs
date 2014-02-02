@@ -1,0 +1,182 @@
+@import url(http://fonts.googleapis.com/css?family=Actor);
+
+div.viewerjs-formatter-field div.field-items div.field-item {
+  display: inline-block;
+  margin: 0 10px 0 0;
+}
+
+div.viewerjs-formatter-field div.field-items div.field-item:last-child, div.viewerjs-formatter-field div.field-items div.field-item:first-child {
+
+}
+
+div.viewerjs-formatter-field div.viewerjs-field-item {
+  width: 169px;
+  display: inline-block;
+  border: 1px solid #4a4a4a;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+div.viewerjs-formatter-field div.viewerjs-thumbnail div.viewerjs-field-item div.viewerjs-item-wrapper{
+  height: 80px;
+  background: no-repeat center bottom;
+}
+div.viewerjs-formatter-field div.viewerjs-field-item div.viewerjs-item-wrapper header {
+  height: 35px;
+}
+
+div.viewerjs-formatter-field div.viewerjs-field-item div.viewerjs-item-wrapper span.name {
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.8);
+}
+
+div.viewerjs-formatter-field div.viewerjs-field-item div.viewerjs-item-wrapper:hover span.name {
+  height: 0;
+  padding: 0;
+}
+
+div.viewerjs-formatter-field div.viewerjs-field-item div.viewerjs-item-wrapper span.size {
+  height: 0;
+  padding: 0;
+  font-size: 14px;
+  font-weight: normal;
+}
+
+div.viewerjs-formatter-field div.viewerjs-field-item div.viewerjs-item-wrapper:hover span.size {
+  height: 25px;
+  padding: 5px;
+}
+
+div.viewerjs-formatter-field div.viewerjs-thumbnail div.viewerjs-field-item div.viewerjs-item-wrapper span.size {
+  height: 0;
+  padding: 1px;
+  position: relative;
+  top: 45px;
+  /*visibility: hidden;*/
+  background: rgba(0, 0, 0, 0.60) none;
+  color: #ffffff;
+  font-weight: normal;
+}
+
+div.viewerjs-formatter-field div.viewerjs-thumbnail div.viewerjs-field-item div.viewerjs-item-wrapper:hover span.size {
+  transition: all 0.1s ease-out;
+  height: 25px;
+  padding: 5px;
+  position: relative;
+  top: 10px;
+  background-color: rgba(0, 0, 0, 0.40);
+  color: #ffffff;
+  visibility: visible;
+}
+
+div.viewerjs-formatter-field div.viewerjs-thumbnail div.viewerjs-field-item div.viewerjs-item-wrapper:hover span.name {
+  height: 25px;
+  padding: 5px;
+}
+
+div.viewerjs-formatter-field div.viewerjs-field-item div.viewerjs-item-wrapper span {
+  transition: all 0.2s ease-in;
+  display: block;
+  color: #fff;
+  overflow: hidden;
+  height: 25px;
+  padding: 5px;
+  font-weight: normal;
+  font-family: 'Actor', sans-serif;
+  background-color: rgba(0, 0, 0, 0.77);
+}
+
+div.viewerjs-formatter-field div.viewerjs-field-item div.viewerjs-item-wrapper span img {
+  float: left;
+  margin-top: 2px;
+  margin-right: 5px;
+}
+
+div.viewerjs-formatter-field div.viewerjs-field-item div.viewerjs-item-wrapper span b {
+  float: left;
+  display: block;
+  width: 138px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  font-weight: normal;
+}
+
+div.viewerjs-formatter-field div.viewerjs-field-item div.viewerjs-item-wrapper ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  text-align: center;
+  height: 24px;
+}
+
+div.viewerjs-formatter-field div.viewerjs-field-item div.viewerjs-item-wrapper ul li {
+  display: inline-block;
+  overflow: hidden;
+  height: 24px;
+  border-radius: 3px;
+  margin: 0 5px;
+  line-height: 24px;
+}
+
+div.viewerjs-formatter-field div.viewerjs-field-item div.viewerjs-item-wrapper ul li a {
+  width: 30px;
+  height: 24px;
+  display: block;
+  overflow: hidden;
+  color: #fff;
+  text-decoration: none;
+  font-size: 16px;
+  line-height: 24px;
+  background-color: rgba(0, 0, 0, 0.85);
+}
+
+div.viewerjs-formatter-field div.viewerjs-field-item div.viewerjs-item-wrapper ul li a:hover {
+  color: #111111;
+  background-color: rgba(255, 255, 255, 0.70);
+}
+
+div.viewerjs-formatter-field div.viewerjs-thumbnail div.viewerjs-field-item div.viewerjs-item-wrapper ul li a:hover {
+  color: #111111;
+  background-color: rgba(255, 255, 255, 0.70);
+  /*box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.6) inset;*/
+
+}
+
+div.viewerjs-formatter-field div.viewerjs-field-item div.viewerjs-item-wrapper ul li a.download {
+}
+
+div.viewerjs-formatter-field div.viewerjs-field-item div.viewerjs-item-wrapper ul li a.preview {
+  line-height: 25px;
+}
+
+div.viewerjs-formatter-field div.viewerjs-field-item div.viewerjs-item-wrapper div.viewerjs-thumb {
+  height: 60px;
+  background: no-repeat center;
+}
+
+.viewerjs-overlay-fog {
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 7;
+}
+
+.viewerjs-overlay-element {
+  margin: 0;
+  padding: 0;
+  border-radius: 3px;
+  border: none;
+  background-color: #fafafa;
+  position: fixed;
+  z-index: 8;
+  box-shadow: 0 0 52px 1px rgba(0, 0, 0, 0.3);
+}
+
+.viewerjs-overlay-element .inner {
+  padding: 10px;
+  height: 430px;
+  overflow: auto;
+  width: 1080px;
+}
+
+.viewerjs-overlay-element .inner h2 {
+  margin: 0;
+}

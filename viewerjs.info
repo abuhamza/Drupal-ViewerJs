@@ -1,0 +1,9 @@
+name = Viewer.js Widget type
+description = Inspired to gmail's attachment preview, using Viewerjs.org library
+core = 7.x
+package = Media
+version = 7.x.1
+
+dependencies[] = file
+dependencies[] = image
+dependencies[] = libraries
