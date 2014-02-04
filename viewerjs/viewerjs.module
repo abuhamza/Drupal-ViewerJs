@@ -5,7 +5,7 @@
  * Create the default image styles used by viewerjs.
  */
 function viewerjs_install() {
-  $image_styles = $image_styles();
+  $image_styles = image_styles();
   if (!isset($image_styles['viewerjs'])) {
     $style = image_style_save(array('name' => 'viewerjs'));
     $effect = array(
@@ -257,37 +257,45 @@ function viewerjs_field_formatter_view($entity_type, $entity, $field, $instance,
           foreach($item AS $k => $v){
             $file->$k = $v;
           }
-          $icon = theme_file_icon(array('file' => $file));
-          if (isset($item['thumbnail']) AND !empty($item['thumbnail'])) {
-            $thumbnail_css = ' style="background-image: url(\'' . $item['thumbnail'] . '\')" ';
-          }
-          else {
-            $thumbnail_css = '';
-          }
-
-
+          $icon = theme_file_icon(array('file' => $file, 'icon_directory' => null));
           $size = format_size($item['filesize']);
           $element[$delta] = array(
-            '#prefix' => '<div class="viewerjs-field-item"><div class="viewerjs-item-wrapper" ' . $thumbnail_css . '><header><span class="name">' . $icon . '<b>' . $item['filename'] . '</b></span><span class="size"><ul class="actions"><li>' . $size . '</li>',
-            'download_' . $delta => array(
-              '#prefix' => '<li>',
-              '#suffix' => '</li>',
-              '#type' => 'link',
-              '#href' => $download_url,
-              '#title' => $item['filename'],
-              '#weight' => 0,
-              '#attributes' => array(
-                'class' => array('download'),
-                'target' => '_blank'
-              )
+            '#type' => 'container',
+            '#attributes' => array(
+              'class' => array('viewerjs-field-item'),
             ),
-            '#suffix' => '</ul></span></header></div></div>',
-            '#weight' => 0
+            'inner_wrapper' => array(
+              '#type' => 'container',
+              '#attributes' => array(
+                'class' => array('viewerjs-item-wrapper'),
+              ),
+              'content' => array(
+                '#prefix' => '<header><span class="name">' . $icon . '<b>' . $item['filename'] . '</b></span><span class="size"><ul class="actions"><li>' . $size . '</li>',
+                '#suffix' => '</ul></span></header>',
+              )
+            )
+          );
+
+          if (isset($item['thumbnail']) AND !empty($item['thumbnail'])) {
+            $element[$delta]['inner_wrapper']['#attributes']['style'] = "background-image: url({$item['thumbnail']})";
+          }
+
+          $element[$delta]['inner_wrapper']['content']['download_' . $delta] = array(
+            '#prefix' => '<li>',
+            '#suffix' => '</li>',
+            '#type' => 'link',
+            '#href' => $download_url,
+            '#title' => $item['filename'],
+            '#weight' => 0,
+            '#attributes' => array(
+              'class' => array('download'),
+              'target' => '_blank'
+            )
           );
 
           if (in_array(strtolower($extension), viewerjs_supported_extensions())) {
             if ('overlay' == $settings['link_type']) {
-              $element[$delta]['preview_' . $delta] = array(
+              $element[$delta]['inner_wrapper']['content']['preview_' . $delta] = array(
                 '#prefix' => '<li>',
                 '#suffix' => '</li>',
                 '#type' => 'link',
@@ -302,10 +310,8 @@ function viewerjs_field_formatter_view($entity_type, $entity, $field, $instance,
                 ),
                 '#weight' => 1,
               );
-
-            }
-            else {
-              $element[$delta]['preview_' . $delta] = array(
+            } else {
+              $element[$delta]['inner_wrapper']['content']['preview_' . $delta] = array(
                 '#prefix' => '<li>',
                 '#suffix' => '</li>',
                 '#type' => 'link',
@@ -322,12 +328,10 @@ function viewerjs_field_formatter_view($entity_type, $entity, $field, $instance,
               );
             }
           }
-
-          // If the thumbnail is set, add another wrapper tot he dom (viewerjs-thumbnail)
+          // If the thumbnail is set, add another wrapper to the dom (viewerjs-thumbnail)
           if (isset($item['thumbnail']) AND !empty($item['thumbnail'])) {
-            $element[$delta]['#prefix'] = '<div class="viewerjs-thumbnail">' . $element[$delta]['#prefix'];
-            $element[$delta]['#suffix'] = '</ul></span></header>';
-            $element[$delta]['#suffix'] .= '</div></div></div>';
+            $element[$delta]['#prefix'] = '<div class="viewerjs-thumbnail">';
+            $element[$delta]['#suffix'] = '</div>';
           }
         }
       }
@@ -335,7 +339,6 @@ function viewerjs_field_formatter_view($entity_type, $entity, $field, $instance,
   }
   return $element;
 }
-
 /**/
 
 /**
