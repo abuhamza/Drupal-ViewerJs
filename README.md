@@ -27,3 +27,11 @@ CUSTOMIZATION
     1. Edit index.html into your libraries/viewerjs folder, adding your custom css file.
     2. Use libraries/viewerjs/viewer.css file as reference.
   If you need a different DOM structure than index.html, just create your own (in the same folder!), then remember to specify the new filename in the settings of the field format (see CONFIGURATION)
+
+
+
+FONT ICONS
+----------
+Entypo pictograms by **Daniel Bruce** — www.entypo.com
+Svg font package made with Fontello.com
+License CC BY-SA 3.0 http://creativecommons.org/licenses/by-sa/3.0/
