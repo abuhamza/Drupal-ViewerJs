@@ -11,8 +11,8 @@ function viewerjs_install() {
     $effect = array(
       'name' => 'image_scale',
       'data' => array(
-        'width' => 900,
-        'height' => 600,
+        'width' => 1000,
+        'height' => 500,
         'upscale' => FALSE,
       ),
       'isid' => $style['isid'],
@@ -23,10 +23,10 @@ function viewerjs_install() {
   if (!isset($image_styles['viewerjs_thumbnail'])) {
     $style = image_style_save(array('name' => 'viewerjs_thumbnail'));
     $effect = array(
-      'name' => 'image_scale',
+      'name' => 'image_scale_and_crop',
       'data' => array(
-        'width' => 169,
-        'height' => 80,
+        'width' => 178,
+        'height' => 118,
         'upscale' => FALSE,
       ),
       'isid' => $style['isid'],
@@ -94,8 +94,9 @@ function viewerjs_field_formatter_info() {
       'label' => t('ViewerJs Default'),
       'field types' => array('file', 'image'),
       'settings' => array(
+        'color' => 'default',
         'link_type' => 'overlay',
-        'overlay_size' => '600x400',
+        'overlay_size' => '1000x500',
         'preview_max_size' => '1000x700',
         'thumbnail' => 'yes',
         'max_image_size' => 'viewerjs',
@@ -133,6 +134,17 @@ function viewerjs_field_formatter_settings_form($field, $instance, $view_mode, $
     '#options' => array(
       'overlay' => 'Overlay',
       'new_window' => 'New Window'
+    ),
+  );
+  $element['color'] = array(
+    '#title' => t('Widget Color'),
+    '#type' => 'select',
+    '#default_value' => $settings['color'],
+    '#options' => array(
+      'default' => t('Default'),
+      'magenta' => t('Magenta'),
+      'green' => t('Green'),
+      'blue' => t('Blue'),
     ),
   );
   $element['template'] = array(
@@ -250,6 +262,9 @@ function viewerjs_field_formatter_view($entity_type, $entity, $field, $instance,
         $viewerjs = libraries_load('viewerjs');
         foreach ($items as $delta => $item) {
           list(, $extension) = explode('.', $item['uri']);
+          if(!isset($item['type'])){
+            $item['type'] = $field['type'];
+          }
           viewerjs_preview_file_alter($item, $settings);
           $download_url = file_create_url($item['uri']);
           $path = $base_url . '/' . $viewerjs['library path'] . '/' . $settings['template'] . '#' . $download_url;
@@ -267,7 +282,7 @@ function viewerjs_field_formatter_view($entity_type, $entity, $field, $instance,
             'inner_wrapper' => array(
               '#type' => 'container',
               '#attributes' => array(
-                'class' => array('viewerjs-item-wrapper'),
+                'class' => array('viewerjs-item-wrapper', $settings['color']),
               ),
               'content' => array(
                 '#prefix' => '<header><span class="name">' . $icon . '<b>' . $item['filename'] . '</b></span><span class="size"><ul class="actions"><li>' . $size . '</li>',
@@ -285,7 +300,7 @@ function viewerjs_field_formatter_view($entity_type, $entity, $field, $instance,
             '#suffix' => '</li>',
             '#type' => 'link',
             '#href' => $download_url,
-            '#title' => $item['filename'],
+            '#title' => t('Download @filename', array('@filename' => $item['filename'])),
             '#weight' => 0,
             '#attributes' => array(
               'class' => array('download'),
@@ -303,6 +318,7 @@ function viewerjs_field_formatter_view($entity_type, $entity, $field, $instance,
                 '#title' => t('Preview with Viewerjs.org'),
                 '#attributes' => array(
                   'target' => '_blank',
+                  'title' => t('Preview with Viewerjs.org'),
                   'class' => array('preview', 'viewerjs-overlay'),
                   'data-viewerjs-overlay-width' => $ow,
                   'data-viewerjs-overlay-height' => $oh,
@@ -319,6 +335,7 @@ function viewerjs_field_formatter_view($entity_type, $entity, $field, $instance,
                 '#title' => t('Preview with Viewerjs.org'),
                 '#attributes' => array(
                   'target' => '_blank',
+                  'title' => t('Preview with Viewerjs.org'),
                   'class' => array('preview'),
                   'data-viewerjs-overlay-width' => $ow,
                   'data-viewerjs-overlay-height' => $oh,
@@ -369,7 +386,8 @@ function viewerjs_preview_file_alter(&$file, $settings) {
  * For image files, simply use the style_url.
  * For documents/pdf, use a icon (customizable) under viewerjs/images
  *
- * @param $file
+ * @param $file File array
+ * @param $image_style
  */
 function viewerjs_thumbnail_file(&$file, $image_style) {
   switch ($file['type']) {
