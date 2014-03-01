@@ -6,13 +6,13 @@ Drupal module that allow the display of file/image fields with Viewerjs.org
 INSTALLATION
 ------------
 1. Rename the module folder to viewerjs 
-2. Download ViewerJs (or clone the ready branch) here: https://github.com/Strae/Viewer.js
-3. If cloning from gitub, please mind to checkout the 'ready' branch!
+2. Download ViewerJs (or clone the **ready** branch) here: https://github.com/Strae/Viewer.js
+3. If cloning from gitub, please mind to checkout the **ready** branch!
 4. Place it into your library folder, usually sites/all/libraries, and rename it viewerjs
   (lowercase it)
 5. Just check that file libraries/viewerjs/Viewer.js  exists.
-6. Check that all the required modules are installed and enabled: libraries ( http://drupal.org/project/libraries ), file and image (from drupal 7 core).
-7. Install the module in Drupal (admin > modules, section Media, or via `drush en viewerjs`)
+6. Check that all the required modules are installed and enabled: **libraries** ( http://drupal.org/project/libraries ), **file** and **image** (from drupal 7 core).
+7. Install the module in Drupal (**admin > modules**, section Media, or via `drush en viewerjs`)
 
 CONFIGURATION
 -------------
