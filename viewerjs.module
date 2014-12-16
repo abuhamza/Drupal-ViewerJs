@@ -378,6 +378,7 @@ function viewerjs_preview_file_alter(&$file, $settings) {
  * @param $image_style
  */
 function viewerjs_thumbnail_file(&$file, $image_style) {
+  global $base_url;
   switch ($file['type']) {
     case 'image':
       $file['thumbnail'] = image_style_url($image_style, $file['uri']);
@@ -386,10 +387,10 @@ function viewerjs_thumbnail_file(&$file, $image_style) {
       // Get the extension
       list(, $extension) = explode('.', $file['uri']);
       if (file_exists(drupal_get_path('module', 'viewerjs') . '/images/' . $extension . '.png')) {
-        $file['thumbnail'] = '/' . drupal_get_path('module', 'viewerjs') . '/images/' . $extension . '.png';
+        $file['thumbnail'] = $base_url .'/' . drupal_get_path('module', 'viewerjs') . '/images/' . $extension . '.png';
       }
       else {
-        $file['thumbnail'] = '/' . drupal_get_path('module', 'viewerjs') . '/images/file.png';
+        $file['thumbnail'] = $base_url .'/' . drupal_get_path('module', 'viewerjs') . '/images/file.png';
       }
       break;
   }
