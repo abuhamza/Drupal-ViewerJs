@@ -249,7 +249,7 @@ function viewerjs_field_formatter_view($entity_type, $entity, $field, $instance,
         drupal_add_js(drupal_get_path('module', 'viewerjs') . '/js/viewerjs.js', array('scope' => 'footer'));
         $viewerjs = libraries_load('viewerjs');
         foreach ($items as $delta => $item) {
-          list(, $extension) = explode('.', $item['uri']);
+          $extension = end(explode('.', $item['uri']));
           if(!isset($item['type'])){
             $item['type'] = $field['type'];
           }
@@ -385,7 +385,7 @@ function viewerjs_thumbnail_file(&$file, $image_style) {
       break;
     default:
       // Get the extension
-      list(, $extension) = explode('.', $file['uri']);
+      $extension = end(explode('.', $file['uri']));
       if (file_exists(drupal_get_path('module', 'viewerjs') . '/images/' . $extension . '.png')) {
         $file['thumbnail'] = $base_url .'/' . drupal_get_path('module', 'viewerjs') . '/images/' . $extension . '.png';
       }
