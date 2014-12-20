@@ -6,7 +6,7 @@
 
 
 /**
- * Implementation of hook_libraries_info()
+ * Implements hook_libraries_info()
  * @return mixed
  */
 function viewerjs_libraries_info() {
@@ -18,8 +18,6 @@ function viewerjs_libraries_info() {
   );
   return $libraries;
 }
-
-/**/
 
 /**
  * @param $phase
@@ -56,7 +54,7 @@ function viewerjs_requirements($phase) {
 /**/
 
 /**
- * Implementation of hook_field_formatter_info()
+ * Implements hook_field_formatter_info()
  * @return array
  */
 function viewerjs_field_formatter_info() {
@@ -81,7 +79,7 @@ function viewerjs_field_formatter_info() {
 /**/
 
 /**
- * Implementation of hook_field_formatter_settings_form()
+ * Implements hook_field_formatter_settings_form()
  *
  * @param $field
  * @param $instance
@@ -173,7 +171,7 @@ function viewerjs_field_formatter_settings_form($field, $instance, $view_mode, $
 /**/
 
 /**
- * Implementation of hook_field_formatter_settings_summary()
+ * Implements hook_field_formatter_settings_summary()
  *
  * @param $field
  * @param $instance
@@ -202,7 +200,7 @@ function viewerjs_field_formatter_settings_summary($field, $instance, $view_mode
 /**/
 
 /**
- * Implementation of hook_field_formatter_view()
+ * Implements hook_field_formatter_view()
  *
  * @param $entity_type
  * @param $entity
