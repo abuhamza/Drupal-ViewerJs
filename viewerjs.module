@@ -263,6 +263,7 @@ function viewerjs_field_formatter_view($entity_type, $entity, $field, $instance,
           }
           $icon = theme_file_icon(array('file' => $file, 'icon_directory' => null));
           $size = format_size($item['filesize']);
+          $filename = !empty($item['description']) ? $item['description'] : $item['filename'];
           $element[$delta] = array(
             '#type' => 'container',
             '#attributes' => array(
@@ -274,7 +275,7 @@ function viewerjs_field_formatter_view($entity_type, $entity, $field, $instance,
                 'class' => array('viewerjs-item-wrapper', $settings['color']),
               ),
               'content' => array(
-                '#prefix' => '<header><span class="name">' . $icon . '<b>' . $item['filename'] . '</b></span><span class="size"><ul class="actions"><li>' . $size . '</li>',
+                '#prefix' => '<header><span class="name">' . $icon . '<b>' . $filename . '</b></span><span class="size"><ul class="actions"><li>' . $size . '</li>',
                 '#suffix' => '</ul></span></header>',
               )
             )
