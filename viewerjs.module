@@ -4,6 +4,28 @@
  * File previewer using ViewerJS Library
  */
 
+/**
+ * Created in 19/06/2014 00:07:32
+ * @author Daniele P. <daniele.pignedoli@gmail.com>
+ *
+ * @license <a href="http://www.gnu.org/licenses/gpl.html" target="_new">
+ * http://www.gnu.org/licenses/gpl.html</a><br /><br />
+ * This program is free software; you can redistribute it and/or modify<br />
+ * it under the terms of the GNU General Public License as published by<br />
+ * the Free Software Foundation; either version 2 of the License, or<br />
+ * (at your option) any later version<br />
+ * <br />
+ * This program is distributed in the hope that it will be useful,<br />
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of<br />
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the<br />
+ * GNU General Public License for more details:<br />
+ * <b>http://www.gnu.org/licenses/gpl.html</b><br />
+ * <br />
+ * You should have received a copy of the GNU General Public License<br />
+ * along with this program; if not, write to the Free Software<br />
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,<br />
+ * MA 02110-1301, USA<br />
+ * */
 
 /**
  * Implements hook_libraries_info()
@@ -232,17 +254,17 @@ function viewerjs_field_formatter_view($entity_type, $entity, $field, $instance,
         foreach ($items as $delta => $item) {
           $splited_uri = explode('.', $item['uri']);
           $extension = end($splited_uri);
-          if(!isset($item['type'])){
+          if (!isset($item['type'])) {
             $item['type'] = $field['type'];
           }
           viewerjs_preview_file_alter($item, $settings);
           $download_url = file_create_url($item['uri']);
           $path = $base_url . '/' . $viewerjs['library path'] . '/' . $settings['template'] . '#' . $download_url;
           $file = new stdClass();
-          foreach($item AS $k => $v){
+          foreach ($item AS $k => $v) {
             $file->$k = $v;
           }
-          $icon = theme_file_icon(array('file' => $file, 'icon_directory' => null));
+          $icon = theme_file_icon(array('file' => $file, 'icon_directory' => NULL));
           $size = format_size($item['filesize']);
           $filename = !empty($item['description']) ? $item['description'] : $item['filename'];
           $element[$delta] = array(
@@ -297,7 +319,8 @@ function viewerjs_field_formatter_view($entity_type, $entity, $field, $instance,
                 ),
                 '#weight' => 1,
               );
-            } else {
+            }
+            else {
               $element[$delta]['inner_wrapper']['content']['preview_' . $delta] = array(
                 '#prefix' => '<li>',
                 '#suffix' => '</li>',
@@ -371,10 +394,10 @@ function viewerjs_thumbnail_file(&$file, $image_style) {
       $splited_uri = explode('.', $file['uri']);
       $extension = end($splited_uri);
       if (file_exists(drupal_get_path('module', 'viewerjs') . '/images/' . $extension . '.png')) {
-        $file['thumbnail'] = $base_url .'/' . drupal_get_path('module', 'viewerjs') . '/images/' . $extension . '.png';
+        $file['thumbnail'] = $base_url . '/' . drupal_get_path('module', 'viewerjs') . '/images/' . $extension . '.png';
       }
       else {
-        $file['thumbnail'] = $base_url .'/' . drupal_get_path('module', 'viewerjs') . '/images/file.png';
+        $file['thumbnail'] = $base_url . '/' . drupal_get_path('module', 'viewerjs') . '/images/file.png';
       }
       break;
   }
