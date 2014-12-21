@@ -1,5 +1,9 @@
 <?php
 /**
+ * @file
+ * File previewer using ViewerJS Library
+ */
+/**
  * Created in 19/06/2014 00:07:32
  * @author Daniele P. <daniele.pignedoli@gmail.com>
  *
