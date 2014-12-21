@@ -123,8 +123,8 @@ function viewerjs_field_formatter_settings_form($field, $instance, $view_mode, $
     '#default_value' => $settings['link_type'],
     '#empty_option' => t('Nothing'),
     '#options' => array(
-      'overlay' => 'Overlay',
-      'new_window' => 'New Window'
+      'overlay' => t('Overlay'),
+      'new_window' => t('New Window')
     ),
   );
   $element['color'] = array(
@@ -173,8 +173,8 @@ function viewerjs_field_formatter_settings_form($field, $instance, $view_mode, $
     '#type' => 'select',
     '#default_value' => $settings['thumbnail'],
     '#options' => array(
-      'yes' => 'Yep.',
-      'no' => 'No.'
+      'yes' => t('Yes.'),
+      'no' => t('No.')
     ),
   );
 
