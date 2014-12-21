@@ -264,7 +264,7 @@ function viewerjs_field_formatter_view($entity_type, $entity, $field, $instance,
           foreach ($item AS $k => $v) {
             $file->$k = $v;
           }
-          $icon = theme_file_icon(array('file' => $file, 'icon_directory' => NULL));
+          $icon = theme('file_icon', array('file' => $file, 'icon_directory' => NULL));
           $size = format_size($item['filesize']);
           $filename = !empty($item['description']) ? $item['description'] : $item['filename'];
           $element[$delta] = array(
