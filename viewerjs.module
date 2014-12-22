@@ -1,34 +1,12 @@
 <?php
 /**
  * @file
- * File previewer using ViewerJS Library
+ * File previewer using ViewerJS Library.
  */
 
 /**
- * Created in 19/06/2014 00:07:32
- * @author Daniele P. <daniele.pignedoli@gmail.com>
+ * Implements hook_libraries_info().
  *
- * @license <a href="http://www.gnu.org/licenses/gpl.html" target="_new">
- * http://www.gnu.org/licenses/gpl.html</a><br /><br />
- * This program is free software; you can redistribute it and/or modify<br />
- * it under the terms of the GNU General Public License as published by<br />
- * the Free Software Foundation; either version 2 of the License, or<br />
- * (at your option) any later version<br />
- * <br />
- * This program is distributed in the hope that it will be useful,<br />
- * but WITHOUT ANY WARRANTY; without even the implied warranty of<br />
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the<br />
- * GNU General Public License for more details:<br />
- * <b>http://www.gnu.org/licenses/gpl.html</b><br />
- * <br />
- * You should have received a copy of the GNU General Public License<br />
- * along with this program; if not, write to the Free Software<br />
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,<br />
- * MA 02110-1301, USA<br />
- * */
-
-/**
- * Implements hook_libraries_info()
  * @return mixed
  */
 function viewerjs_libraries_info() {
@@ -42,6 +20,7 @@ function viewerjs_libraries_info() {
 }
 
 /**
+ *
  * @param $phase
  *
  * @return array
@@ -58,7 +37,12 @@ function viewerjs_requirements($phase) {
     if (TRUE !== file_exists($libraries['viewerjs'] . '/viewer.js')) {
       $requirements['viewerjs']['value'] = $t('Not Installed');
       $requirements['viewerjs']['severity'] = REQUIREMENT_ERROR;
-      $requirements['viewerjs']['description'] = $t('Please install the viewerjs library %url.', array('%url' => 'https://github.com/Strae/Viewer.js'));
+      $requirements['viewerjs']['description'] = $t(
+        'Please install the viewerjs library %url.',
+        array(
+          '%url' => 'https://github.com/Strae/Viewer.js'
+        )
+      );
     }
     else {
       $requirements['viewerjs']['value'] = $t('Installed');
@@ -80,34 +64,34 @@ function viewerjs_requirements($phase) {
  * @return array
  */
 function viewerjs_field_formatter_info() {
-  return array(
-    'viewerjs' => array(
-      'label' => t('ViewerJs Default'),
-      'field types' => array('file', 'image'),
-      'settings' => array(
-        'color' => 'default',
-        'link_type' => 'overlay',
-        'overlay_size' => '1000x500',
-        'preview_max_size' => '1000x700',
-        'thumbnail' => 'yes',
-        'max_image_size' => 'viewerjs',
-        'thumbnail_size' => 'viewerjs_thumbnail',
-        'template' => 'index.html'
-      )
-    ),
-  );
+    return array(
+      'viewerjs' => array(
+        'label' => t('ViewerJs Default'),
+        'field types' => array('file', 'image'),
+        'settings' => array(
+          'color' => 'default',
+          'link_type' => 'overlay',
+          'overlay_size' => '1000x500',
+          'preview_max_size' => '1000x700',
+          'thumbnail' => 'yes',
+          'max_image_size' => 'viewerjs',
+          'thumbnail_size' => 'viewerjs_thumbnail',
+          'template' => 'index.html'
+        )
+      ),
+    );
 }
 
 /**/
 
 /**
  * Implements hook_field_formatter_settings_form()
- *
  * @param $field
  * @param $instance
  * @param $view_mode
  * @param $form
  * @param $form_state
+ * @return mixed
  */
 function viewerjs_field_formatter_settings_form($field, $instance, $view_mode, $form, &$form_state) {
   $styles = image_styles();
@@ -264,7 +248,10 @@ function viewerjs_field_formatter_view($entity_type, $entity, $field, $instance,
           foreach ($item AS $k => $v) {
             $file->$k = $v;
           }
-          $icon = theme('file_icon', array('file' => $file, 'icon_directory' => NULL));
+          $icon = theme('file_icon', array(
+            'file' => $file,
+            'icon_directory' => NULL
+          ));
           $size = format_size($item['filesize']);
           $filename = !empty($item['description']) ? $item['description'] : $item['filename'];
           $element[$delta] = array(
@@ -350,6 +337,7 @@ function viewerjs_field_formatter_view($entity_type, $entity, $field, $instance,
   }
   return $element;
 }
+
 /**/
 
 /**
@@ -373,8 +361,6 @@ function viewerjs_preview_file_alter(&$file, $settings) {
   }
 }
 
-/**/
-
 /**
  * Create the thumbnail (image).
  * For image files, simply use the style_url.
@@ -390,7 +376,7 @@ function viewerjs_thumbnail_file(&$file, $image_style) {
       $file['thumbnail'] = image_style_url($image_style, $file['uri']);
       break;
     default:
-      // Get the extension
+      // Get the extension.
       $splited_uri = explode('.', $file['uri']);
       $extension = end($splited_uri);
       if (file_exists(drupal_get_path('module', 'viewerjs') . '/images/' . $extension . '.png')) {
@@ -403,11 +389,9 @@ function viewerjs_thumbnail_file(&$file, $image_style) {
   }
 }
 
-/**/
-
 /**
- * Return a list of extension supported by Viewerjs's PluginLoader
- * @return array
+ * Return a list of extension supported by Viewerjs's PluginLoader.
+ *
  */
 function viewerjs_supported_extensions() {
   return array(
@@ -415,11 +399,11 @@ function viewerjs_supported_extensions() {
     'odt',
     'odp',
     'ods',
-    'fodt', // documents
+    'fodt',
     'jpg',
     'jpeg',
     'png',
-    'gif' //images
+    'gif',
   );
 }
 /**/
