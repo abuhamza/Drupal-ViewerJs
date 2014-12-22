@@ -1,4 +1,7 @@
-@import url(http://fonts.googleapis.com/css?family=Open+Sans);
+/**
+ * @file
+ * File previewer using ViewerJS Library.
+ */
 
 .viewerjs-item-wrapper {
   border: 1px solid #c0c0c0;
