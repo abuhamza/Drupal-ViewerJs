@@ -1,8 +1,8 @@
-
 /**
  * @file
- * File previewer using ViewerJS Library
+ * File previewer using ViewerJS Library.
  */
+
 /**
  * Center an element in the absolute middle of the screen.
  */
