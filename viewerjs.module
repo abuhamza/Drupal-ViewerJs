@@ -70,7 +70,7 @@ function viewerjs_field_formatter_settings_form($field, $instance, $view_mode, $
     '#empty_option' => t('Nothing'),
     '#options' => array(
       'overlay' => t('Overlay'),
-      'new_window' => t('New Window')
+      'new_window' => t('New Window'),
     ),
   );
   $element['color'] = array(
@@ -89,21 +89,21 @@ function viewerjs_field_formatter_settings_form($field, $instance, $view_mode, $
     '#type' => 'textfield',
     '#default_value' => $settings['template'],
     '#required' => TRUE,
-    '#description' => t('The template html file to use. Default index.html. The template MUST be in the Viewerjs library folder.')
+    '#description' => t('The template html file to use. Default index.html. The template MUST be in the Viewerjs library folder.'),
   );
   $element['overlay_size'] = array(
     '#title' => t('Overlay Size'),
     '#type' => 'textfield',
     '#default_value' => $settings['overlay_size'],
     '#required' => TRUE,
-    '#description' => t('The overlay size in the format widthxheight, for example 400x300.<br>Used only when Overlay is set as Preview Type')
+    '#description' => t('The overlay size in the format widthxheight, for example 400x300.<br>Used only when Overlay is set as Preview Type'),
   );
   $element['preview_max_size'] = array(
     '#title' => t('Max size of the preview'),
     '#type' => 'textfield',
     '#default_value' => $settings['preview_max_size'],
     '#required' => TRUE,
-    '#description' => t('Only for images: if the image size widthXheight is bigger that this value, the preview will use "viewerjs" image style.')
+    '#description' => t('Only for images: if the image size widthXheight is bigger that this value, the preview will use "viewerjs" image style.'),
   );
   $element['max_image_size'] = array(
     '#title' => t('Image max size'),
@@ -120,7 +120,7 @@ function viewerjs_field_formatter_settings_form($field, $instance, $view_mode, $
     '#default_value' => $settings['thumbnail'],
     '#options' => array(
       'yes' => t('Yes.'),
-      'no' => t('No.')
+      'no' => t('No.'),
     ),
   );
 
@@ -130,7 +130,7 @@ function viewerjs_field_formatter_settings_form($field, $instance, $view_mode, $
     '#default_value' => $settings['thumbnail_size'],
     '#required' => TRUE,
     '#options' => $styles_options,
-    '#description' => t('Only for images: the style used to create the thumbnail')
+    '#description' => t('Only for images: the style used to create the thumbnail'),
   );
 
   return $element;
@@ -139,13 +139,9 @@ function viewerjs_field_formatter_settings_form($field, $instance, $view_mode, $
 /**/
 
 /**
- * Implements hook_field_formatter_settings_summary()
  *
- * @param $field
- * @param $instance
- * @param $view_mode
+ * Implements hook_field_formatter_settings_summary().
  *
- * @return string
  */
 function viewerjs_field_formatter_settings_summary($field, $instance, $view_mode) {
   $display = $instance['display'][$view_mode];
@@ -165,27 +161,16 @@ function viewerjs_field_formatter_settings_summary($field, $instance, $view_mode
   return $output;
 }
 
-/**/
-
 /**
- * Implements hook_field_formatter_view()
+ * Implements hook_field_formatter_view().
  *
- * @param $entity_type
- * @param $entity
- * @param $field
- * @param $instance
- * @param $langcode
- * @param $items
- * @param $display
- *
- * @return array
  */
 function viewerjs_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
   $element = array(
     '#type' => 'markup',
     '#markup' => '',
     '#prefix' => '<div class="viewerjs-formatter-field">',
-    '#suffix' => '</div>'
+    '#suffix' => '</div>',
   );
   switch ($display['type']) {
     case 'viewerjs':
@@ -212,7 +197,7 @@ function viewerjs_field_formatter_view($entity_type, $entity, $field, $instance,
           }
           $icon = theme('file_icon', array(
             'file' => $file,
-            'icon_directory' => NULL
+            'icon_directory' => NULL,
           ));
           $size = format_size($item['filesize']);
           $filename = !empty($item['description']) ? $item['description'] : $item['filename'];
@@ -246,8 +231,8 @@ function viewerjs_field_formatter_view($entity_type, $entity, $field, $instance,
             '#weight' => 0,
             '#attributes' => array(
               'class' => array('download'),
-              'target' => '_blank'
-            )
+              'target' => '_blank',
+            ),
           );
 
           if (in_array(strtolower($extension), viewerjs_supported_extensions())) {
