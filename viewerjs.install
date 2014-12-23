@@ -44,6 +44,7 @@ function viewerjs_install() {
  *
  * Implements hook_requirements().
  *
+ * This hook will issue error if the viewerJS library is not installed.
  */
 function viewerjs_requirements($phase) {
   $requirements = array();
