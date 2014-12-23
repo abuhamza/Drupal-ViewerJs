@@ -61,7 +61,7 @@ function viewerjs_requirements($phase) {
       $requirements['viewerjs']['description'] = $t(
         'Please install the viewerjs library %url.',
         array(
-          '%url' => 'https://github.com/Strae/Viewer.js'
+          '%url' => 'https://github.com/Strae/Viewer.js',
         )
       );
     }
