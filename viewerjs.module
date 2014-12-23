@@ -7,7 +7,6 @@
 /**
  * Implements hook_libraries_info().
  *
- * @return mixed
  */
 function viewerjs_libraries_info() {
   $libraries['viewerjs'] = array(
@@ -15,47 +14,10 @@ function viewerjs_libraries_info() {
     'vendor url' => 'https://github.com/Strae/Viewer.js',
     'download url' => 'https://github.com/Strae/Viewer.js/archive/master.zip',
     'version' => 'last'
-  );
+  ); //
   return $libraries;
 }
 
-/**
- *
- * @param $phase
- *
- * @return array
- */
-function viewerjs_requirements($phase) {
-  $requirements = array();
-  // Ensure translations do not break at install time
-  $t = get_t();
-  $requirements['viewerjs'] = array(
-    'title' => $t('ViewerJs'),
-  );
-  $libraries = libraries_get_libraries();
-  if (isset($libraries['viewerjs'])) {
-    if (TRUE !== file_exists($libraries['viewerjs'] . '/viewer.js')) {
-      $requirements['viewerjs']['value'] = $t('Not Installed');
-      $requirements['viewerjs']['severity'] = REQUIREMENT_ERROR;
-      $requirements['viewerjs']['description'] = $t(
-        'Please install the viewerjs library %url.',
-        array(
-          '%url' => 'https://github.com/Strae/Viewer.js'
-        )
-      );
-    }
-    else {
-      $requirements['viewerjs']['value'] = $t('Installed');
-      $requirements['viewerjs']['severity'] = REQUIREMENT_OK;
-    }
-  }
-  else {
-    $requirements['viewerjs']['value'] = $t('Not Installed');
-    $requirements['viewerjs']['severity'] = REQUIREMENT_ERROR;
-    $requirements['viewerjs']['description'] = $t('Please install the viewerjs library %url.', array('%url' => 'https://github.com/Strae/viewer.js'));
-  }
-  return $requirements;
-}
 
 /**/
 
