@@ -12,9 +12,9 @@ function viewerjs_libraries_info() {
     'name' => 'ViewerJs.org',
     'vendor url' => 'https://github.com/Strae/Viewer.js',
     'download url' => 'https://github.com/Strae/Viewer.js/archive/master.zip',
-    'version' => 'last'
+    'version' => 'last',
   );
-  // Info to download viewerJS library
+  // Info to download viewerJS library.
   return $libraries;
 }
 
@@ -34,8 +34,8 @@ function viewerjs_field_formatter_info() {
         'thumbnail' => 'yes',
         'max_image_size' => 'viewerjs',
         'thumbnail_size' => 'viewerjs_thumbnail',
-        'template' => 'index.html'
-      )
+        'template' => 'index.html',
+      ),
     ),
   );
 }
@@ -46,7 +46,7 @@ function viewerjs_field_formatter_info() {
 function viewerjs_field_formatter_settings_form($field, $instance, $view_mode, $form, &$form_state) {
   $styles = image_styles();
   $styles_options = array();
-  foreach ($styles AS $style_name => $options) {
+  foreach ($styles as $style_name => $options) {
     $styles_options[$style_name] = $options['label'];
   }
   $display = $instance['display'][$view_mode];
@@ -84,7 +84,7 @@ function viewerjs_field_formatter_settings_form($field, $instance, $view_mode, $
     '#type' => 'textfield',
     '#default_value' => $settings['overlay_size'],
     '#required' => TRUE,
-    '#description' => t('The overlay size in the format widthxheight, for example 400x300.<br>Used only when Overlay is set as Preview Type'),
+    '#description' => t('The overlay size in the format widthxheight, for example 400x300.<br/>Used only when Overlay is set as Preview Type'),
   );
   $element['preview_max_size'] = array(
     '#title' => t('Max size of the preview'),
@@ -99,7 +99,7 @@ function viewerjs_field_formatter_settings_form($field, $instance, $view_mode, $
     '#default_value' => $settings['max_image_size'],
     '#required' => TRUE,
     '#options' => $styles_options,
-    '#description' => t('Only for images: when the image is bigger than "Max size of the preview", this image style will be used to resize it.')
+    '#description' => t('Only for images: when the image is bigger than "Max size of the preview", this image style will be used to resize it.'),
   );
 
   $element['thumbnail'] = array(
@@ -125,9 +125,7 @@ function viewerjs_field_formatter_settings_form($field, $instance, $view_mode, $
 }
 
 /**
- *
  * Implements hook_field_formatter_settings_summary().
- *
  */
 function viewerjs_field_formatter_settings_summary($field, $instance, $view_mode) {
   $display = $instance['display'][$view_mode];
@@ -177,7 +175,7 @@ function viewerjs_field_formatter_view($entity_type, $entity, $field, $instance,
           $download_url = file_create_url($item['uri']);
           $path = $base_url . '/' . $viewerjs['library path'] . '/' . $settings['template'] . '#' . $download_url;
           $file = new stdClass();
-          foreach ($item AS $k => $v) {
+          foreach ($item as $k => $v) {
             $file->$k = $v;
           }
           $icon = theme('file_icon', array(
@@ -199,8 +197,8 @@ function viewerjs_field_formatter_view($entity_type, $entity, $field, $instance,
               'content' => array(
                 '#prefix' => '<header><span class="name">' . $icon . '<b>' . $filename . '</b></span><span class="size"><ul class="actions"><li>' . $size . '</li>',
                 '#suffix' => '</ul></span></header>',
-              )
-            )
+              ),
+            ),
           );
 
           if (isset($item['thumbnail']) AND !empty($item['thumbnail'])) {
@@ -234,7 +232,7 @@ function viewerjs_field_formatter_view($entity_type, $entity, $field, $instance,
                   'class' => array('preview', 'viewerjs-overlay'),
                   'data-viewerjs-overlay-width' => $ow,
                   'data-viewerjs-overlay-height' => $oh,
-                  'data-viewerjs-overlay-id' => $item['fid']
+                  'data-viewerjs-overlay-id' => $item['fid'],
                 ),
                 '#weight' => 1,
               );
@@ -252,13 +250,13 @@ function viewerjs_field_formatter_view($entity_type, $entity, $field, $instance,
                   'class' => array('preview'),
                   'data-viewerjs-overlay-width' => $ow,
                   'data-viewerjs-overlay-height' => $oh,
-                  'data-viewerjs-overlay-id' => $item['fid']
+                  'data-viewerjs-overlay-id' => $item['fid'],
                 ),
                 '#weight' => 1,
               );
             }
           }
-          // If the thumbnail is set, add another wrapper to the dom (viewerjs-thumbnail)
+          // If the thumbnail is set, add another wrapper to the dom.
           if (isset($item['thumbnail']) AND !empty($item['thumbnail'])) {
             $element[$delta]['#prefix'] = '<div class="viewerjs-thumbnail">';
             $element[$delta]['#suffix'] = '</div>';
@@ -271,11 +269,12 @@ function viewerjs_field_formatter_view($entity_type, $entity, $field, $instance,
 }
 
 /**
- * Check if we have to alter the file, adding a thumbnail or resizing the
- * dimensions (for images only)
+ * Check if we have to alter the file.
  *
- * @param $file
- * @param $settings
+ * Adding a thumbnail or resizing the dimensions (for images only).
+ *
+ * @param array $file File array to alter.
+ * @param array $settings Array of formatter settings.
  */
 function viewerjs_preview_file_alter(&$file, $settings) {
   if (isset($settings['thumbnail']) AND 'yes' == $settings['thumbnail']) {
@@ -285,19 +284,19 @@ function viewerjs_preview_file_alter(&$file, $settings) {
   if ('image' === $file['type'] AND !empty($file['image_dimensions'])) {
     list($mw, $mh) = explode('x', $settings['preview_max_size']);
     if ($file['image_dimensions']['width'] > $mw OR $file['image_dimensions']['height'] > $mh) {
-      // use viewerjs image style.
+      // Use viewerjs image style.
       $file['uri'] = image_style_url($settings['max_image_size'], $file['uri']);
     }
   }
 }
 
 /**
- * Create the thumbnail (image).
- * For image files, simply use the style_url.
- * For documents/pdf, use a icon (customizable) under viewerjs/images
+ * Create the thumbnail (image). For image files, simply use the style_url.
  *
- * @param $file File array
- * @param $image_style
+ * For documents/pdf, use a icon (customizable) under viewerjs/images.
+ *
+ * @param array $file Array of file metadata.
+ * @param string $image_style The image style to use for file thumbnail.
  */
 function viewerjs_thumbnail_file(&$file, $image_style) {
   global $base_url;
@@ -305,6 +304,7 @@ function viewerjs_thumbnail_file(&$file, $image_style) {
     case 'image':
       $file['thumbnail'] = image_style_url($image_style, $file['uri']);
       break;
+
     default:
       // Get the extension.
       $splited_uri = explode('.', $file['uri']);
