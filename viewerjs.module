@@ -316,6 +316,7 @@ function viewerjs_thumbnail_file(&$file, $image_style) {
         $file['thumbnail'] = $base_url . '/' . drupal_get_path('module', 'viewerjs') . '/images/file.png';
       }
       break;
+
   }
 }
 
@@ -335,4 +336,3 @@ function viewerjs_supported_extensions() {
     'gif',
   );
 }
-
