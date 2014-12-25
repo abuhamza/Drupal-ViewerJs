@@ -273,8 +273,10 @@ function viewerjs_field_formatter_view($entity_type, $entity, $field, $instance,
  *
  * Adding a thumbnail or resizing the dimensions (for images only).
  *
- * @param array $file File array to alter.
- * @param array $settings Array of formatter settings.
+ * @param array &$file
+ * File array to alter.
+ * @param array $settings
+ * Array of formatter settings.
  */
 function viewerjs_preview_file_alter(&$file, $settings) {
   if (isset($settings['thumbnail']) AND 'yes' == $settings['thumbnail']) {
@@ -295,8 +297,10 @@ function viewerjs_preview_file_alter(&$file, $settings) {
  *
  * For documents/pdf, use a icon (customizable) under viewerjs/images.
  *
- * @param array $file Array of file metadata.
- * @param string $image_style The image style to use for file thumbnail.
+ * @param array &$file
+ * Array of file metadata.
+ * @param string $image_style
+ * The image style to use for file thumbnail.
  */
 function viewerjs_thumbnail_file(&$file, $image_style) {
   global $base_url;
