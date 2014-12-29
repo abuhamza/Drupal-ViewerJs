@@ -155,115 +155,101 @@ function viewerjs_field_formatter_view($entity_type, $entity, $field, $instance,
     '#prefix' => '<div class="viewerjs-formatter-field">',
     '#suffix' => '</div>',
   );
-  switch ($display['type']) {
-    case 'viewerjs':
-      if (!empty($items)) {
-        $settings = $display['settings'];
-        list($ow, $oh) = explode('x', $settings['overlay_size']);
-        global $base_url;
-        drupal_add_css(drupal_get_path('module', 'viewerjs') . '/css/css/fontello.css');
-        drupal_add_css(drupal_get_path('module', 'viewerjs') . '/css/viewerjs.css');
-        drupal_add_js(drupal_get_path('module', 'viewerjs') . '/js/viewerjs.js', array('scope' => 'footer'));
-        $viewerjs_path = viewerjs_get_viewerjs_path();
-        foreach ($items as $delta => $item) {
-          $splited_uri = explode('.', $item['uri']);
-          $extension = end($splited_uri);
-          if (!isset($item['type'])) {
-            $item['type'] = $field['type'];
-          }
-          viewerjs_preview_file_alter($item, $settings);
-          $download_url = file_create_url($item['uri']);
-          $path = $base_url . '/' . $viewerjs_path . '/' . $settings['template'] . '#' . $download_url;
-          $file = new stdClass();
-          foreach ($item as $k => $v) {
-            $file->$k = $v;
-          }
-          $icon = theme('file_icon', array(
-            'file' => $file,
-            'icon_directory' => NULL,
-          ));
-          $size = format_size($item['filesize']);
-          $filename = !empty($item['description']) ? $item['description'] : $item['filename'];
-          $element[$delta] = array(
-            '#type' => 'container',
-            '#attributes' => array(
-              'class' => array('viewerjs-field-item'),
-            ),
-            'inner_wrapper' => array(
-              '#type' => 'container',
-              '#attributes' => array(
-                'class' => array('viewerjs-item-wrapper', $settings['color']),
-              ),
-              'content' => array(
-                '#prefix' => '<header><span class="name">' . $icon . '<b>' . $filename . '</b></span><span class="size"><ul class="actions"><li>' . $size . '</li>',
-                '#suffix' => '</ul></span></header>',
-              ),
-            ),
-          );
+  if (($display['type'] == 'viewerjs') && !empty($items)) {
+    $settings = $display['settings'];
+    list($ow, $oh) = explode('x', $settings['overlay_size']);
+    global $base_url;
+    drupal_add_css(drupal_get_path('module', 'viewerjs') . '/css/css/fontello.css');
+    drupal_add_css(drupal_get_path('module', 'viewerjs') . '/css/viewerjs.css');
+    drupal_add_js(drupal_get_path('module', 'viewerjs') . '/js/viewerjs.js', array('scope' => 'footer'));
+    $viewerjs_path = viewerjs_get_viewerjs_path();
+    foreach ($items as $delta => $item) {
+      $splited_uri = explode('.', $item['uri']);
+      $extension = end($splited_uri);
 
-          if (isset($item['thumbnail']) AND !empty($item['thumbnail'])) {
-            $element[$delta]['inner_wrapper']['#attributes']['style'] = "background-image: url({$item['thumbnail']})";
-          }
-
-          $element[$delta]['inner_wrapper']['content']['download_' . $delta] = array(
-            '#prefix' => '<li>',
-            '#suffix' => '</li>',
-            '#type' => 'link',
-            '#href' => $download_url,
-            '#title' => t('Download @filename', array('@filename' => $item['filename'])),
-            '#weight' => 0,
-            '#attributes' => array(
-              'class' => array('download'),
-              'target' => '_blank',
-            ),
-          );
-
-          if (in_array(strtolower($extension), viewerjs_supported_extensions())) {
-            if ('overlay' == $settings['link_type']) {
-              $element[$delta]['inner_wrapper']['content']['preview_' . $delta] = array(
-                '#prefix' => '<li>',
-                '#suffix' => '</li>',
-                '#type' => 'link',
-                '#href' => $path,
-                '#title' => t('Preview with Viewerjs.org'),
-                '#attributes' => array(
-                  'target' => '_blank',
-                  'title' => t('Preview with Viewerjs.org'),
-                  'class' => array('preview', 'viewerjs-overlay'),
-                  'data-viewerjs-overlay-width' => $ow,
-                  'data-viewerjs-overlay-height' => $oh,
-                  'data-viewerjs-overlay-id' => $item['fid'],
-                ),
-                '#weight' => 1,
-              );
-            }
-            else {
-              $element[$delta]['inner_wrapper']['content']['preview_' . $delta] = array(
-                '#prefix' => '<li>',
-                '#suffix' => '</li>',
-                '#type' => 'link',
-                '#href' => $path,
-                '#title' => t('Preview with Viewerjs.org'),
-                '#attributes' => array(
-                  'target' => '_blank',
-                  'title' => t('Preview with Viewerjs.org'),
-                  'class' => array('preview'),
-                  'data-viewerjs-overlay-width' => $ow,
-                  'data-viewerjs-overlay-height' => $oh,
-                  'data-viewerjs-overlay-id' => $item['fid'],
-                ),
-                '#weight' => 1,
-              );
-            }
-          }
-          // If the thumbnail is set, add another wrapper to the dom.
-          if (isset($item['thumbnail']) AND !empty($item['thumbnail'])) {
-            $element[$delta]['#prefix'] = '<div class="viewerjs-thumbnail">';
-            $element[$delta]['#suffix'] = '</div>';
-          }
-        }
+      if (!isset($item['type'])) {
+        $item['type'] = $field['type'];
       }
-      break;
+      viewerjs_preview_file_alter($item, $settings);
+
+      $download_url = file_create_url($item['uri']);
+      $path = $base_url . '/' . $viewerjs_path . '/' . $settings['template'] . '#' . $download_url;
+      $file = new stdClass();
+      foreach ($item as $k => $v) {
+        $file->$k = $v;
+      }
+      $icon = theme('file_icon', array(
+        'file' => $file,
+        'icon_directory' => NULL,
+      ));
+      $size = format_size($item['filesize']);
+      $filename = !empty($item['description']) ? $item['description'] : $item['filename'];
+
+      $thumbnail = FALSE;
+      if (isset($item['thumbnail']) AND !empty($item['thumbnail'])) {
+        $thumbnail = "background-image: url({$item['thumbnail']})";
+      }
+
+      $download_link = array(
+        '#theme' => 'link',
+        '#text' => t('Download @filename', array('@filename' => $item['filename'])),
+        '#path' => $download_url,
+        '#options' => array(
+          'attributes' => array(
+            'class' => array('download'),
+            'target' => '_blank'
+          ),
+          'html' => FALSE,
+        ),
+      );
+
+      $preview_link = FALSE;
+      if (in_array(strtolower($extension), viewerjs_supported_extensions())) {
+        $preview_class = array('preview');
+        if ('overlay' == $settings['link_type']) {
+          $preview_class[] = 'viewerjs-overlay';
+        }
+        $preview_link = array(
+          '#theme' => 'link',
+          '#text' => t('Preview with Viewerjs.org'),
+          '#path' => $path,
+          '#options' => array(
+            'attributes' => array(
+              'target' => '_blank',
+              'title' => t('Preview with Viewerjs.org'),
+              'class' => $preview_class,
+              'data-viewerjs-overlay-width' => $ow,
+              'data-viewerjs-overlay-height' => $oh,
+              'data-viewerjs-overlay-id' => $item['fid'],
+            ),
+            'html' => FALSE,
+          ),
+        );
+      }
+      // If the thumbnail is set, add another wrapper to the dom.
+      if (isset($item['thumbnail']) AND !empty($item['thumbnail'])) {
+        $element[$delta]['#prefix'] = '<div class="viewerjs-thumbnail">';
+        $element[$delta]['#suffix'] = '</div>';
+      }
+      $element[$delta] = array(
+        '#theme' => 'viewerjs',
+        '#path' => $path,
+        '#ow' => $ow,
+        '#oh' => $oh,
+        '#fid' => $item['fid'],
+        '#type' => $item['type'],
+        '#download_url' => $download_url,
+        '#size' => $size,
+        '#filename' => $filename,
+        '#icon' => $icon,
+        '#thumbnail' => $thumbnail,
+        '#attributes' => array(
+          'class' => array('viewerjs-field-item'),
+        ),
+        '#download_link' => $download_link,
+        '#preview_link' => $preview_link,
+      );
+    }
   }
   return $element;
 }
@@ -322,6 +308,40 @@ function viewerjs_thumbnail_file(array &$file, $image_style) {
       break;
 
   }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function viewerjs_theme() {
+  return array(
+    'viewerjs' => array(
+      'template' => 'viewerjs',
+      'variables' => array(
+        'path' => NULL,
+        'ow' => NULL,
+        'oh' => NULL,
+        'fid' => NULL,
+        'color' => NULL,
+        'type' => NULL,
+        'download_url' => NULL,
+        'size' => NULL,
+        'filename' => NULL,
+        'icon' => NULL,
+        'thumbnail' => NULL,
+        'download_link' => NULL,
+        'preview_link' => NULL,
+      ),
+    ),
+  );
+}
+
+/**
+ * Implements template_preprocess_HOOK()
+ */
+function template_preprocess_viewerjs(&$variables) {
+  //$variables['path'] = check_plain($variables['title']);
+
 }
 
 /**
