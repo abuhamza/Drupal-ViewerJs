@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Default theme implementation for viewerjs_field_formatter_view
+ * Default theme implementation for viewerjs_field_formatter_view.
  *
  * Available variables:
  * - $color : The class to display widget in built-in color.
