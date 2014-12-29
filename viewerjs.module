@@ -340,7 +340,7 @@ function viewerjs_theme() {
  * Implements template_preprocess_HOOK()
  */
 function template_preprocess_viewerjs(&$variables) {
-  //$variables['path'] = check_plain($variables['title']);
+  $variables['filename'] = check_plain($variables['filename']);
 
 }
 
