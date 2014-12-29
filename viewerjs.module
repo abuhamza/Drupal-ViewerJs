@@ -197,7 +197,7 @@ function viewerjs_field_formatter_view($entity_type, $entity, $field, $instance,
         '#options' => array(
           'attributes' => array(
             'class' => array('download'),
-            'target' => '_blank'
+            'target' => '_blank',
           ),
           'html' => FALSE,
         ),
@@ -233,19 +233,11 @@ function viewerjs_field_formatter_view($entity_type, $entity, $field, $instance,
       }
       $element[$delta] = array(
         '#theme' => 'viewerjs',
-        '#path' => $path,
-        '#ow' => $ow,
-        '#oh' => $oh,
-        '#fid' => $item['fid'],
-        '#type' => $item['type'],
-        '#download_url' => $download_url,
         '#size' => $size,
+        '#color' => $settings['color'],
         '#filename' => $filename,
         '#icon' => $icon,
         '#thumbnail' => $thumbnail,
-        '#attributes' => array(
-          'class' => array('viewerjs-field-item'),
-        ),
         '#download_link' => $download_link,
         '#preview_link' => $preview_link,
       );
@@ -318,13 +310,7 @@ function viewerjs_theme() {
     'viewerjs' => array(
       'template' => 'viewerjs',
       'variables' => array(
-        'path' => NULL,
-        'ow' => NULL,
-        'oh' => NULL,
-        'fid' => NULL,
         'color' => NULL,
-        'type' => NULL,
-        'download_url' => NULL,
         'size' => NULL,
         'filename' => NULL,
         'icon' => NULL,
@@ -337,7 +323,7 @@ function viewerjs_theme() {
 }
 
 /**
- * Implements template_preprocess_HOOK()
+ * Implements template_preprocess_HOOK().
  */
 function template_preprocess_viewerjs(&$variables) {
   $variables['filename'] = check_plain($variables['filename']);
@@ -364,7 +350,7 @@ function viewerjs_supported_extensions() {
 /**
  * Get the location of the viewerjs library.
  *
- * @return
+ * @return string
  *   The location of the library, or FALSE if the library isn't installed.
  */
 function viewerjs_get_viewerjs_path() {
