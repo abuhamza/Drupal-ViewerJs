@@ -159,7 +159,6 @@ function viewerjs_field_formatter_view($entity_type, $entity, $field, $instance,
     $settings = $display['settings'];
     list($ow, $oh) = explode('x', $settings['overlay_size']);
     global $base_url;
-    drupal_add_css(drupal_get_path('module', 'viewerjs') . '/css/css/fontello.css');
     drupal_add_css(drupal_get_path('module', 'viewerjs') . '/css/viewerjs.css');
     drupal_add_js(drupal_get_path('module', 'viewerjs') . '/js/viewerjs.js', array('scope' => 'footer'));
     $viewerjs_path = viewerjs_get_viewerjs_path();
@@ -192,7 +191,7 @@ function viewerjs_field_formatter_view($entity_type, $entity, $field, $instance,
 
       $download_link = array(
         '#theme' => 'link',
-        '#text' => t('Download @filename', array('@filename' => $item['filename'])),
+        '#text' => t('Download'),
         '#path' => $download_url,
         '#options' => array(
           'attributes' => array(
@@ -211,7 +210,7 @@ function viewerjs_field_formatter_view($entity_type, $entity, $field, $instance,
         }
         $preview_link = array(
           '#theme' => 'link',
-          '#text' => t('Preview with Viewerjs.org'),
+          '#text' => t('Preview'),
           '#path' => $path,
           '#options' => array(
             'attributes' => array(
