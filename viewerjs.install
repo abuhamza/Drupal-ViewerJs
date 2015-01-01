@@ -5,6 +5,37 @@
  */
 
 /**
+ * Implements hook_requirements().
+ *
+ * This hook will issue error if the viewerJS library is not installed.
+ */
+function viewerjs_requirements($phase) {
+  $requirements = array();
+  module_load_include('module', 'viewerjs');
+  // Ensure translations do not break at install time.
+  $t = get_t();
+  $requirements['viewerjs'] = array(
+    'title' => $t('ViewerJs'),
+  );
+  $viewerjs_path = viewerjs_get_viewerjs_path();
+  if (!$viewerjs_path) {
+    $requirements['viewerjs']['value'] = $t('Not Installed');
+    $requirements['viewerjs']['severity'] = REQUIREMENT_ERROR;
+    $requirements['viewerjs']['description'] = $t(
+      'Please install the viewerjs library %url.',
+      array(
+        '%url' => 'https://github.com/Strae/Viewer.js',
+      )
+    );
+  }
+  else {
+    $requirements['viewerjs']['value'] = $t('Installed');
+    $requirements['viewerjs']['severity'] = REQUIREMENT_OK;
+  }
+  return $requirements;
+}
+
+/**
  * Implements hook_install().
  *
  * Create the default image styles used by viewerjs.
@@ -38,35 +69,4 @@ function viewerjs_install() {
     );
     image_effect_save($effect);
   }
-}
-
-/**
- * Implements hook_requirements().
- *
- * This hook will issue error if the viewerJS library is not installed.
- */
-function viewerjs_requirements($phase) {
-  $requirements = array();
-
-  // Ensure translations do not break at install time.
-  $t = get_t();
-  $requirements['viewerjs'] = array(
-    'title' => $t('ViewerJs'),
-  );
-  $viewerjs_path = viewerjs_get_viewerjs_path();
-  if (!$viewerjs_path) {
-    $requirements['viewerjs']['value'] = $t('Not Installed');
-    $requirements['viewerjs']['severity'] = REQUIREMENT_ERROR;
-    $requirements['viewerjs']['description'] = $t(
-      'Please install the viewerjs library %url.',
-      array(
-        '%url' => 'https://github.com/Strae/Viewer.js',
-      )
-    );
-  }
-  else {
-    $requirements['viewerjs']['value'] = $t('Installed');
-    $requirements['viewerjs']['severity'] = REQUIREMENT_OK;
-  }
-  return $requirements;
 }
