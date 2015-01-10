@@ -5,6 +5,39 @@
  */
 
 /**
+ * Implements hook_help().
+ */
+function viewerjs_help($path, $arg) {
+  switch ($path) {
+    case 'admin/help#viewerjs':
+      $path = dirname(__FILE__) . '/README.md';
+      if (file_exists($path)) {
+        $readme = file_get_contents($path);
+      }
+      if (!isset($readme)) {
+        return NULL;
+      }
+      if (module_exists('markdown')) {
+        $filters = module_invoke('markdown', 'filter_info');
+        $info = $filters['filter_markdown'];
+
+        if (function_exists($info['process callback'])) {
+          $function = $info['process callback'];
+          $output = filter_xss_admin($function($readme, NULL));
+        }
+        else {
+          $output = '<pre>' . check_plain($readme) . '</pre>';
+        }
+      }
+      else {
+        $output = '<pre>' . check_plain($readme) . '</pre>';
+      }
+
+      return $output;
+  }
+}
+
+/**
  * Implements hook_libraries_info().
  */
 function viewerjs_libraries_info() {
