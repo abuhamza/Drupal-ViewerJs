@@ -25,7 +25,7 @@
       <div class="name">
         <?php print $icon; ?><b><?php print $filename; ?></b>
       </div>
-      <span class="size">
+      <div class="size">
         <ul class="actions">
           <li><?php print $size; ?></li>
           <li><?php print render($download_link); ?></li>
@@ -33,6 +33,8 @@
             <li><?php print render($preview_link); ?></li>
           <?php endif; ?>
         </ul>
+        </div>
+    </header>
   </div>
-  </header>
+
 </div>
