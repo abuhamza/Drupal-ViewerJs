@@ -88,11 +88,11 @@ function viewerjs_field_formatter_settings_form($field, $instance, $view_mode, $
     '#title' => t('Preview Type'),
     '#type' => 'select',
     '#default_value' => $settings['link_type'],
-    '#empty_option' => t('Nothing'),
     '#options' => array(
       'overlay' => t('Overlay'),
       'new_window' => t('New Window'),
     ),
+    '#required' => TRUE,
   );
   $element['color'] = array(
     '#title' => t('Widget Color'),
