@@ -386,7 +386,7 @@ function viewerjs_supported_extensions() {
  *   The location of the library, or FALSE if the library isn't installed.
  */
 function viewerjs_get_viewerjs_path() {
-  if (module_exists('libraries') && function_exists('libraries_get_path')) {
+  if (function_exists('libraries_get_path')) {
     return libraries_get_path('viewerjs');
   }
 
