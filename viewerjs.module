@@ -23,14 +23,14 @@ function viewerjs_help($path, $arg) {
 
         if (function_exists($info['process callback'])) {
           $function = $info['process callback'];
-          $output = filter_xss_admin($function($readme, NULL));
+          $output = $function($readme, NULL);
         }
         else {
-          $output = '<pre>' . check_plain($readme) . '</pre>';
+          $output = '<pre>' . $readme . '</pre>';
         }
       }
       else {
-        $output = '<pre>' . check_plain($readme) . '</pre>';
+        $output = '<pre>' . $readme . '</pre>';
       }
 
       return $output;
