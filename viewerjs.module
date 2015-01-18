@@ -206,9 +206,10 @@ function viewerjs_field_formatter_view($entity_type, $entity, $field, $instance,
         $item['type'] = $field['type'];
       }
       viewerjs_preview_file_alter($item, $settings);
-
       $download_url = file_create_url($item['uri']);
-      $path = url('/' . $viewerjs_path . '/' . $settings['template'] . '#' . $download_url);
+      $url_option = array('absolute' => TRUE);
+      $path = url($viewerjs_path, $url_option) . '/' . $settings['template'] . '#' . $download_url;
+
       $file = new stdClass();
       foreach ($item as $k => $v) {
         $file->$k = $v;
