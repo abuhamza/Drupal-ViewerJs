@@ -192,8 +192,12 @@ function viewerjs_field_formatter_view($entity_type, $entity, $field, $instance,
     $settings = $display['settings'];
     list($ow, $oh) = explode('x', $settings['overlay_size']);
     global $base_url;
-    drupal_add_css(drupal_get_path('module', 'viewerjs') . '/css/viewerjs.css');
-    drupal_add_js(drupal_get_path('module', 'viewerjs') . '/js/viewerjs.js', array('scope' => 'footer'));
+    $element['#attached']['css'] = array(
+      drupal_get_path('module', 'viewerjs') . '/css/viewerjs.css',
+    );
+    $element['#attached']['js'] = array(
+      drupal_get_path('module', 'viewerjs') . '/js/viewerjs.js',
+    );
     $viewerjs_path = viewerjs_get_viewerjs_path();
     foreach ($items as $delta => $item) {
       $splited_uri = explode('.', $item['uri']);
