@@ -191,7 +191,6 @@ function viewerjs_field_formatter_view($entity_type, $entity, $field, $instance,
   if (($display['type'] == 'viewerjs') && !empty($items)) {
     $settings = $display['settings'];
     list($ow, $oh) = explode('x', $settings['overlay_size']);
-    global $base_url;
     $element['#attached']['css'] = array(
       drupal_get_path('module', 'viewerjs') . '/css/viewerjs.css',
     );
@@ -209,7 +208,7 @@ function viewerjs_field_formatter_view($entity_type, $entity, $field, $instance,
       viewerjs_preview_file_alter($item, $settings);
 
       $download_url = file_create_url($item['uri']);
-      $path = $base_url . '/' . $viewerjs_path . '/' . $settings['template'] . '#' . $download_url;
+      $path = url('/' . $viewerjs_path . '/' . $settings['template'] . '#' . $download_url);
       $file = new stdClass();
       foreach ($item as $k => $v) {
         $file->$k = $v;
@@ -317,7 +316,6 @@ function viewerjs_preview_file_alter(array &$file, array $settings) {
  *    The image style to use for file thumbnail.
  */
 function viewerjs_thumbnail_file(array &$file, $image_style) {
-  global $base_url;
   switch ($file['type']) {
     case 'image':
       $file['thumbnail'] = image_style_url($image_style, $file['uri']);
@@ -328,10 +326,12 @@ function viewerjs_thumbnail_file(array &$file, $image_style) {
       $splited_uri = explode('.', $file['uri']);
       $extension = end($splited_uri);
       if (file_exists(drupal_get_path('module', 'viewerjs') . '/images/' . $extension . '.png')) {
-        $file['thumbnail'] = $base_url . '/' . drupal_get_path('module', 'viewerjs') . '/images/' . $extension . '.png';
+        $file['thumbnail'] = drupal_get_path('module', 'viewerjs') . '/images/' . $extension . '.png';
+        $file['thumbnail'] = url($file['thumbnail']);
       }
       else {
-        $file['thumbnail'] = $base_url . '/' . drupal_get_path('module', 'viewerjs') . '/images/file.png';
+        $file['thumbnail'] = drupal_get_path('module', 'viewerjs') . '/images/file.png';
+        $file['thumbnail'] = url($file['thumbnail']);
       }
       break;
 
