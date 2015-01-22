@@ -23,6 +23,13 @@ This module requires the following modules and libraries:
  - Libraries (http://drupal.org/project/libraries)
  - ViewerJS (https://github.com/Strae/Viewer.js/archive/master.zip)
 
+INSTALLATION VIA DRUSH
+------------
+A Drush command is provided in the latest versions for easy installation of the ViewerJS plugin.
+    drush viewerjs-plugin
+The command will download the plugin and unpack it in "sites/all/libraries".
+It is possible to add another path as an option to the command, but not recommended unless you know what you are doing.
+
 INSTALLATION
 ------------
  * Download the ViewerJS library and extract it to sites/all/libraries/viewerjs
