@@ -96,11 +96,10 @@ function drush_viewerjs_plugin() {
     }
 
     // Decompress the zip archive.
-    drush_tarball_extract($filename, $dirname);
-
+    drush_tarball_extract($filename);
     // Change the directory name to "viewerjs" if needed.
     if ($dirname != 'viewerjs') {
-      drush_move_dir($dirname, 'viewerjs', TRUE);
+      drush_move_dir('Viewer.js-master', 'viewerjs', TRUE);
       $dirname = 'viewerjs';
     }
   }
