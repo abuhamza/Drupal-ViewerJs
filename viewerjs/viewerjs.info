@@ -1,5 +1,6 @@
 name = Viewer.js
 description = Inspired to gmail's attachment preview, using Viewerjs.org library
+core = 7.x
 package = Media
 version = 7.x.1
 
